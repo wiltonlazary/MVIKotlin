@@ -10,10 +10,16 @@ internal class TimeTravelToolWindow(
     importer: Importer
 ) {
 
-    private val view = TimeTravelView(onConnect = ::onConnect, export = exporter::export, import = importer::import)
-    private val client = TimeTravelClient(host = "localhost", port = DEFAULT_PORT, view = view)
+    private val clientView = TimeTravelClientViewImpl(onConnect = ::onConnect, export = exporter::export, import = importer::import)
 
-    val content: JComponent = view.content
+    private val client =
+        TimeTravelClient(
+            enableSettings = true,
+            clientView = clientView,
+            settingsView = TimeTravelSettingsViewImpl()
+        )
+
+    val content: JComponent = clientView.content
 
     init {
         client.onCreate()

@@ -1,9 +1,9 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal.mappers
+package com.arkivanov.mvikotlin.timetravel.client.internal.client.mappers
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.Intent
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView.Event
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.Intent
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView.Event
 
-internal val eventToIntent: Event.() -> Intent? =
+internal val clientEventToIntent: Event.() -> Intent? =
     {
         when (this) {
             is Event.ConnectClicked -> Intent.Connect
@@ -19,6 +19,7 @@ internal val eventToIntent: Event.() -> Intent? =
             is Event.EventSelected -> Intent.SelectEvent(index = index)
             is Event.ExportEventsClicked -> Intent.ExportEvents
             is Event.ImportEventsConfirmed -> Intent.ImportEvents(data = data)
-            is Event.ImportEventsClicked -> null
+            is Event.ImportEventsClicked,
+            is Event.ShowSettingsClicked -> null
         }
     }

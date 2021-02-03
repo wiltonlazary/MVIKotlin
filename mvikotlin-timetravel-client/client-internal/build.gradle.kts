@@ -14,6 +14,7 @@ kotlinCompat {
                 implementation(project(":mvikotlin-extensions-reaktive"))
                 implementation(Deps.Badoo.Reaktive.Reaktive)
                 implementation(Deps.Badoo.Reaktive.ReaktiveAnnotations)
+                implementation("com.russhwolf:multiplatform-settings:0.7.6")
             }
         }
     }

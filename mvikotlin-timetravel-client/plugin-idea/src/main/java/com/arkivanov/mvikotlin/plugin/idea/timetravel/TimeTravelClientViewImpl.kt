@@ -3,9 +3,10 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 import com.arkivanov.mvikotlin.core.utils.diff
 import com.arkivanov.mvikotlin.core.view.BaseMviView
 import com.arkivanov.mvikotlin.core.view.ViewRenderer
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView.Event
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView.Model
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView.Action
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView.Event
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView.Model
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ValueTextTreeBuilder
 import com.intellij.ui.JBSplitter
@@ -20,7 +21,7 @@ import javax.swing.JTree
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
-internal class TimeTravelView(
+internal class TimeTravelClientViewImpl(
     private val onConnect: () -> Boolean,
     private val export: (ByteArray) -> Unit,
     private val import: () -> ByteArray?
@@ -62,11 +63,11 @@ internal class TimeTravelView(
             diff(get = Model::selectedEventValue, set = ::renderSelectedEventValue)
         }
 
-    override fun execute(action: TimeTravelClientView.Action): Unit =
+    override fun execute(action: Action): Unit =
         when (action) {
-            is TimeTravelClientView.Action.ExportEvents -> export(action.data)
-            is TimeTravelClientView.Action.ImportEvents -> importEvents()
-            is TimeTravelClientView.Action.ShowError -> showErrorDialog(text = action.text)
+            is Action.ExportEvents -> export(action.data)
+            is Action.ImportEvents -> importEvents()
+            is Action.ShowError -> showErrorDialog(text = action.text)
         }
 
     private fun importEvents() {

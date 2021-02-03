@@ -1,9 +1,9 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal
+package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.Intent
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.Label
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.State
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.Intent
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.Label
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.State
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
@@ -38,15 +38,10 @@ internal interface TimeTravelClientStore : Store<Intent, State, Label> {
             val events: List<TimeTravelEvent> = emptyList(),
             val currentEventIndex: Int = -1,
             val mode: TimeTravelStateUpdate.Mode = TimeTravelStateUpdate.Mode.IDLE,
-            val selectedEvent: SelectedEvent? = null,
+            val selectedEventIndex: Int = -1,
             /*private*/ internal val disposable: Disposable,
             /*private*/ internal val writer: (TimeTravelCommand) -> Unit
-        ) : State() {
-            data class SelectedEvent(
-                val event: TimeTravelEvent,
-                val index: Int
-            )
-        }
+        ) : State()
     }
 
     sealed class Label {

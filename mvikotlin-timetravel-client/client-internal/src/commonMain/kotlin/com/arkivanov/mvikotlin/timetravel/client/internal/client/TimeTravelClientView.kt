@@ -1,8 +1,8 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal
+package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
 import com.arkivanov.mvikotlin.core.view.MviView
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView.Event
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView.Model
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView.Event
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView.Model
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
 
 interface TimeTravelClientView : MviView<Model, Event> {
@@ -14,7 +14,8 @@ interface TimeTravelClientView : MviView<Model, Event> {
         val currentEventIndex: Int,
         val buttons: Buttons,
         val selectedEventIndex: Int,
-        val selectedEventValue: Value?
+        val selectedEventValue: Value?,
+        val wrapEventDetails: Boolean
     ) {
         data class Buttons(
             val isConnectEnabled: Boolean,
@@ -43,6 +44,7 @@ interface TimeTravelClientView : MviView<Model, Event> {
         object MoveToEndClicked : Event()
         object CancelClicked : Event()
         object DebugEventClicked : Event()
+        object ShowSettingsClicked : Event()
         data class EventSelected(val index: Int) : Event()
         object ExportEventsClicked : Event()
         object ImportEventsClicked : Event()

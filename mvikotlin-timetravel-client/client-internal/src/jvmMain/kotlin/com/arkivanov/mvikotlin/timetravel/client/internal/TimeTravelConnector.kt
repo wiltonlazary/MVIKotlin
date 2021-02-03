@@ -1,34 +1,26 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStoreFactory.Connector
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStoreFactory.Connector
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.ReaderThread
 import com.arkivanov.mvikotlin.timetravel.proto.internal.io.WriterThread
 import com.badoo.reaktive.disposable.Disposable
-import com.badoo.reaktive.observable.Observable
-import com.badoo.reaktive.observable.ObservableEmitter
-import com.badoo.reaktive.observable.observable
-import com.badoo.reaktive.observable.observeOn
-import com.badoo.reaktive.observable.onErrorReturn
-import com.badoo.reaktive.observable.subscribeOn
+import com.badoo.reaktive.observable.*
 import com.badoo.reaktive.scheduler.ioScheduler
 import com.badoo.reaktive.scheduler.mainScheduler
 import java.net.Socket
 
-internal class TimeTravelConnector(
-    private val host: String,
-    private val port: Int
-) : Connector {
+internal class TimeTravelConnector : Connector {
 
-    override fun connect(): Observable<Connector.Event> =
-        observable<Connector.Event> { it.connect() }
+    override fun connect(host: String, port: Int): Observable<Connector.Event> =
+        observable<Connector.Event> { it.connect(host = host, port = port) }
             .onErrorReturn { Connector.Event.Error(it.message) }
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
 
-    private fun ObservableEmitter<Connector.Event>.connect() {
+    private fun ObservableEmitter<Connector.Event>.connect(host: String, port: Int) {
         val socket = Socket(host, port)
 
         if (isDisposed) {

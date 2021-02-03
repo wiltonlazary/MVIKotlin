@@ -1,12 +1,12 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal
+package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.ReaktiveExecutor
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.Intent
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.Label
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStore.State
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.Intent
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.Label
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStore.State
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelcomand.TimeTravelCommand
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelevent.TimeTravelEvent
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetraveleventsupdate.TimeTravelEventsUpdate
@@ -19,7 +19,9 @@ import com.badoo.reaktive.observable.doOnBeforeSubscribe
 
 internal class TimeTravelClientStoreFactory(
     private val storeFactory: StoreFactory,
-    private val connector: Connector
+    private val connector: Connector,
+    private val host: () -> String,
+    private val port: () -> Int
 ) {
 
     fun create(): TimeTravelClientStore =
@@ -34,8 +36,7 @@ internal class TimeTravelClientStoreFactory(
         class Connected(val writer: (TimeTravelCommand) -> Unit) : Result()
         object Disconnected : Result()
         class StateUpdate(val stateUpdate: TimeTravelStateUpdate) : Result()
-        class EventSelected(val event: TimeTravelEvent, val index: Int) : Result()
-        object EventUnselected : Result()
+        class EventSelected(val index: Int) : Result()
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Result, Label>() {
@@ -51,7 +52,7 @@ internal class TimeTravelClientStoreFactory(
                 is Intent.MoveToEnd -> sendIfNeeded(getState()) { TimeTravelCommand.MoveToEnd }
                 is Intent.Cancel -> sendIfNeeded(getState()) { TimeTravelCommand.Cancel }
                 is Intent.DebugEvent -> debugEventIfNeeded(getState())
-                is Intent.SelectEvent -> selectEventIfNeeded(getState(), intent.index)
+                is Intent.SelectEvent -> selectEvent(intent.index)
                 is Intent.ExportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ExportEvents }
                 is Intent.ImportEvents -> sendIfNeeded(getState()) { TimeTravelCommand.ImportEvents(intent.data) }
             }
@@ -65,7 +66,7 @@ internal class TimeTravelClientStoreFactory(
 
         private fun connect() {
             connector
-                .connect()
+                .connect(host = host(), port = port())
                 .doOnBeforeSubscribe { dispatch(Result.Connecting(it)) }
                 .doOnBeforeFinally { dispatch(Result.Disconnected) }
                 .subscribeScoped(onNext = ::onEvent)
@@ -103,25 +104,16 @@ internal class TimeTravelClientStoreFactory(
 
         private fun debugEventIfNeeded(state: State) {
             sendIfNeeded(state) {
-                selectedEvent?.event?.id?.let(TimeTravelCommand::DebugEvent)
+                when (state) {
+                    is State.Disconnected,
+                    is State.Connecting -> null
+                    is State.Connected -> state.events.getOrNull(state.selectedEventIndex)?.id?.let(TimeTravelCommand::DebugEvent)
+                }
             }
         }
 
-        private fun selectEventIfNeeded(state: State, index: Int): Unit =
-            when (state) {
-                is State.Disconnected,
-                is State.Connecting -> Unit
-                is State.Connected -> selectEvent(state, index)
-            }
-
-        private fun selectEvent(state: State.Connected, index: Int) {
-            dispatch(
-                state
-                    .events
-                    .getOrNull(index)
-                    ?.let { Result.EventSelected(event = it, index = index) }
-                    ?: Result.EventUnselected
-            )
+        private fun selectEvent(index: Int) {
+            dispatch(Result.EventSelected(index = index))
         }
     }
 
@@ -133,7 +125,6 @@ internal class TimeTravelClientStoreFactory(
                 is Result.Disconnected -> State.Disconnected
                 is Result.StateUpdate -> applyStateUpdate(result)
                 is Result.EventSelected -> applyEventSelected(result)
-                is Result.EventUnselected -> applyEventUnselected()
             }
 
         private fun State.applyConnected(result: Result.Connected): State =
@@ -154,7 +145,8 @@ internal class TimeTravelClientStoreFactory(
             copy(
                 events = events.applyUpdate(update = update.eventsUpdate),
                 currentEventIndex = update.selectedEventIndex,
-                mode = update.mode
+                mode = update.mode,
+                selectedEventIndex = selectedEventIndex.coerceAtMost(events.lastIndex)
             )
 
         private fun List<TimeTravelEvent>.applyUpdate(update: TimeTravelEventsUpdate): List<TimeTravelEvent> =
@@ -167,20 +159,20 @@ internal class TimeTravelClientStoreFactory(
             when (this) {
                 is State.Disconnected,
                 is State.Connecting -> this
-                is State.Connected -> copy(selectedEvent = State.Connected.SelectedEvent(event = result.event, index = result.index))
+                is State.Connected -> copy(selectedEventIndex = result.index)
             }
 
         private fun State.applyEventUnselected(): State =
             when (this) {
                 is State.Disconnected,
                 is State.Connecting -> this
-                is State.Connected -> copy(selectedEvent = null)
+                is State.Connected -> copy(selectedEventIndex = -1)
             }
     }
 
     interface Connector {
         @EventsOnMainScheduler
-        fun connect(): Observable<Event>
+        fun connect(host: String, port: Int): Observable<Event>
 
         sealed class Event {
             class Connected(val writer: (TimeTravelCommand) -> Unit) : Event()

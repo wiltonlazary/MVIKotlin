@@ -13,6 +13,7 @@ include(":mvikotlin-timetravel-proto-internal")
 include(":mvikotlin-timetravel-client:client-internal")
 doIfJvmTargetAvailable {
     include(":mvikotlin-timetravel-client:plugin-idea")
+    include(":mvikotlin-timetravel-client:app-desktop")
 }
 include(":mvikotlin-extensions-reaktive")
 include(":mvikotlin-extensions-coroutines")

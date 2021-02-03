@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientStoreFactory.Connector
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientStoreFactory.Connector
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.ProtoObject
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelexport.TimeTravelExport
 import com.arkivanov.mvikotlin.timetravel.proto.internal.data.timetravelstateupdate.TimeTravelStateUpdate
@@ -29,7 +29,6 @@ import platform.posix.IPPROTO_TCP
 import platform.posix.PF_INET
 import platform.posix.SOCK_STREAM
 import platform.posix.close
-import platform.posix.connect
 import platform.posix.errno
 import platform.posix.gethostbyname
 import platform.posix.h_errno

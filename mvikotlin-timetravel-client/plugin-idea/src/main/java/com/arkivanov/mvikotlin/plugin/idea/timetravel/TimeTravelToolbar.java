@@ -1,6 +1,6 @@
 package com.arkivanov.mvikotlin.plugin.idea.timetravel;
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClientView;
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionPlaces;

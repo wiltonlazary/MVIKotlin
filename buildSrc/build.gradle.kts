@@ -5,10 +5,12 @@ plugins {
 repositories {
     google()
     jcenter()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 dependencies {
     implementation(Deps.Jetbrains.Kotlin.Plugin.Gradle)
+    implementation(Deps.Jetbrains.Compose.Plugin.Gradle)
     implementation(Deps.Android.Tools.Build.Gradle)
     implementation(Deps.TouchLab.KotlinXcodeSync)
 }

@@ -2,7 +2,7 @@ object Deps {
 
     object Jetbrains {
         object Kotlin : Group(name = "org.jetbrains.kotlin") {
-            private const val version = "1.5.0"
+            private const val version = "1.4.32"
 
             object Plugin {
                 object Gradle : Dependency(group = Kotlin, name = "kotlin-gradle-plugin", version = version)
@@ -31,6 +31,14 @@ object Deps {
 
                 object Core : Dependency(group = Kotlinx, name = "kotlinx-coroutines-core", version = version)
                 object Android : Dependency(group = Kotlinx, name = "kotlinx-coroutines-android", version = version)
+            }
+        }
+
+        object Compose : Group(name = "org.jetbrains.compose") {
+            private const val version = "0.4.0-build190"
+
+            object Plugin {
+                object Gradle : Dependency(group = Compose, name = "compose-gradle-plugin", version = version)
             }
         }
     }
@@ -79,6 +87,7 @@ object Deps {
             object Reaktive : Dependency(group = Badoo.Reaktive, name = "reaktive", version = version)
             object ReaktiveAnnotations : Dependency(group = Badoo.Reaktive, name = "reaktive-annotations", version = version)
             object ReaktiveTesting : Dependency(group = Badoo.Reaktive, name = "reaktive-testing", version = version)
+            object CoroutinesInterop : Dependency(group = Badoo.Reaktive, name = "coroutines-interop", version = version)
         }
     }
 
@@ -89,7 +98,7 @@ object Deps {
     open class Group(val name: String)
 
     open class Dependency private constructor(
-        private val notation: String
+            private val notation: String
     ) : CharSequence by notation {
         constructor(group: Group, name: String, version: String) : this("${group.name}:$name:$version")
 

@@ -1,5 +1,6 @@
 package com.arkivanov.mvikotlin.timetravel.client.internal
 
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClientView
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
 
 @Suppress("FunctionName") // Factory function
