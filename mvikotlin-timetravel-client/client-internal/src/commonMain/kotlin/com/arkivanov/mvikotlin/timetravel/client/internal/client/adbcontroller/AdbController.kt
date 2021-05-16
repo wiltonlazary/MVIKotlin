@@ -1,4 +1,4 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal.client.adbportforwarder
+package com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller
 
 interface AdbController {
 

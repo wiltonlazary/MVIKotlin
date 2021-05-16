@@ -1,6 +1,7 @@
-package com.arkivanov.mvikotlin.timetravel.client.internal.client.adbportforwarder
+package com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller
 
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbportforwarder.AdbController.Result
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.AdbController
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.AdbController.Result
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set

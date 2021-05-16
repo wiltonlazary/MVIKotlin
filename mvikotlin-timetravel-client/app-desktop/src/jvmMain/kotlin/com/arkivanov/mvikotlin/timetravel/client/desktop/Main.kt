@@ -3,7 +3,6 @@ package com.arkivanov.mvikotlin.timetravel.client.desktop
 import androidx.compose.desktop.DesktopTheme
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.arkivanov.mvikotlin.core.lifecycle.LifecycleRegistry
@@ -11,10 +10,11 @@ import com.arkivanov.mvikotlin.core.lifecycle.resume
 import com.arkivanov.mvikotlin.core.utils.setMainThreadId
 import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbportforwarder.DefaultAdbController
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.DefaultAdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.TimeTravelClientComponent
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.TimeTravelConnectorFactory
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.ui.TimeTravelClientUi
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.theme.TimeTravelClientTheme
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.DefaultSettings
 import com.badoo.reaktive.coroutinesinterop.asScheduler
 import com.badoo.reaktive.scheduler.overrideSchedulers
@@ -38,7 +38,7 @@ fun main() {
         size = getPreferredWindowSize(desiredWidth = 1920, desiredHeight = 1080)
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
-            MaterialTheme {
+            TimeTravelClientTheme {
                 DesktopTheme {
                     TimeTravelClientUi(client)
                 }

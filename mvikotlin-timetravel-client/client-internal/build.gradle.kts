@@ -1,6 +1,6 @@
 import org.jetbrains.compose.compose
 
-buildTargets = setOf(BuildTarget.Jvm)
+buildTargets = setOf(BuildTarget.Jvm, BuildTarget.Android)
 
 setupMultiplatform()
 
@@ -10,10 +10,9 @@ kotlinCompat {
     sourceSets {
         commonMain {
             dependencies {
-                api(project(":mvikotlin-timetravel-proto-internal"))
-                api(project(":mvikotlin"))
                 implementation(project(":rx"))
-                implementation(project(":mvikotlin-main"))
+                implementation(project(":mvikotlin-timetravel-proto-internal"))
+                implementation(project(":mvikotlin"))
                 implementation(project(":mvikotlin-extensions-reaktive"))
                 implementation(Deps.Badoo.Reaktive.Reaktive)
                 implementation(Deps.Badoo.Reaktive.ReaktiveAnnotations)

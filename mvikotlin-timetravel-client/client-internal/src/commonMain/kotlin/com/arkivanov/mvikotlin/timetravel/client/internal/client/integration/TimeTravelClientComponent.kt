@@ -7,7 +7,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.reaktive.bind
 import com.arkivanov.mvikotlin.extensions.reaktive.labels
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
-import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbportforwarder.AdbController
+import com.arkivanov.mvikotlin.timetravel.client.internal.client.adbcontroller.AdbController
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.integration.mappers.stateToModel
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Intent
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.store.TimeTravelClientStore.Label
