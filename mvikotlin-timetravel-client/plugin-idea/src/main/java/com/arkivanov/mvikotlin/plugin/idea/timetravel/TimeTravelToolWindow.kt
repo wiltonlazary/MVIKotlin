@@ -2,6 +2,8 @@ package com.arkivanov.mvikotlin.plugin.idea.timetravel
 
 import com.arkivanov.mvikotlin.timetravel.client.internal.TimeTravelClient
 import com.arkivanov.mvikotlin.timetravel.proto.internal.DEFAULT_PORT
+import java.io.BufferedReader
+import java.io.IOException
 import javax.swing.JComponent
 
 internal class TimeTravelToolWindow(

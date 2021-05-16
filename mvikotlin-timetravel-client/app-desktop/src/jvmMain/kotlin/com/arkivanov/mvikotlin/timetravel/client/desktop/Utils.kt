@@ -2,7 +2,9 @@ package com.arkivanov.mvikotlin.timetravel.client.desktop
 
 import androidx.compose.ui.unit.IntSize
 import java.awt.Dimension
+import java.awt.FileDialog
 import java.awt.Toolkit
+import java.io.File
 import javax.swing.SwingUtilities
 
 fun <T> invokeOnAwtSync(block: () -> T): T {
@@ -22,3 +24,6 @@ fun getPreferredWindowSize(desiredWidth: Int, desiredHeight: Int): IntSize {
 
     return IntSize(width, height)
 }
+
+val FileDialog.selectedFile: File?
+    get() = if ((directory != null) && (file != null)) File(directory, file) else null

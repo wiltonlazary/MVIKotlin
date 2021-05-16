@@ -1,8 +1,10 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.compose.compose
 
-buildTargets = setOf(BuildTarget.Jvm, BuildTarget.MacOsX64)
+buildTargets = setOf(BuildTarget.Jvm)
 
 setupMultiplatform()
+
+plugins.apply("org.jetbrains.compose")
 
 kotlinCompat {
     sourceSets {
@@ -10,58 +12,17 @@ kotlinCompat {
             dependencies {
                 api(project(":mvikotlin-timetravel-proto-internal"))
                 api(project(":mvikotlin"))
+                implementation(project(":rx"))
                 implementation(project(":mvikotlin-main"))
                 implementation(project(":mvikotlin-extensions-reaktive"))
                 implementation(Deps.Badoo.Reaktive.Reaktive)
                 implementation(Deps.Badoo.Reaktive.ReaktiveAnnotations)
-                implementation("com.russhwolf:multiplatform-settings:0.7.6")
+                implementation(Deps.RusshWolf.MultiplatformSettings)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.materialIconsExtended)
             }
-        }
-    }
-
-    macosX64Compat()?.setupBinaries()
-}
-
-fun KotlinNativeTarget.setupBinaries() {
-    binaries {
-        framework {
-            baseName = "TimeTravelClient"
-            freeCompilerArgs = freeCompilerArgs.plus("-Xobjc-generics").toMutableList()
-
-            export(project(":mvikotlin-timetravel-proto-internal"))
-            export(project(":mvikotlin"))
-        }
-    }
-}
-
-doIfBuildTargetAvailable<BuildTarget.MacOsX64> {
-    val packMacForXcode by tasks.creating(Sync::class) {
-        val targetDir = File(buildDir, "xcode-mac-frameworks")
-
-        kotlinCompat {
-            /// selecting the right configuration for the iOS
-            /// framework depending on the environment
-            /// variables set by Xcode build
-            val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
-            val framework = targets
-                .getByName<KotlinNativeTarget>("macosX64")
-                .binaries.getFramework(mode)
-            inputs.property("mode", mode)
-            dependsOn(framework.linkTask)
-
-            from({ framework.outputDirectory })
-            into(targetDir)
-        }
-        /// generate a helpful ./gradlew wrapper with embedded Java path
-        doLast {
-            val gradlew = File(targetDir, "gradlew")
-            gradlew.writeText(
-                "#!/bin/bash\n"
-                    + "export 'JAVA_HOME=${System.getProperty("java.home")}'\n"
-                    + "cd '${rootProject.rootDir}'\n"
-                    + "./gradlew \$@\n"
-            )
-            gradlew.setExecutable(true)
         }
     }
 }

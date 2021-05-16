@@ -95,10 +95,14 @@ object Deps {
         object KotlinXcodeSync : Dependency(group = TouchLab, name = "kotlinxcodesync", version = "0.2")
     }
 
+    object RusshWolf : Group(name = "com.russhwolf") {
+        object MultiplatformSettings : Dependency(group = RusshWolf, name = "multiplatform-settings", version = "0.7.6")
+    }
+
     open class Group(val name: String)
 
     open class Dependency private constructor(
-            private val notation: String
+        private val notation: String
     ) : CharSequence by notation {
         constructor(group: Group, name: String, version: String) : this("${group.name}:$name:$version")
 

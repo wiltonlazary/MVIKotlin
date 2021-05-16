@@ -17,7 +17,9 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(Deps.Badoo.Reaktive.Reaktive)
                 implementation(Deps.Badoo.Reaktive.CoroutinesInterop)
+                implementation(Deps.RusshWolf.MultiplatformSettings)
                 implementation(project(":mvikotlin"))
+                implementation(project(":mvikotlin-main"))
                 implementation(project(":mvikotlin-timetravel-client:client-internal"))
             }
         }
