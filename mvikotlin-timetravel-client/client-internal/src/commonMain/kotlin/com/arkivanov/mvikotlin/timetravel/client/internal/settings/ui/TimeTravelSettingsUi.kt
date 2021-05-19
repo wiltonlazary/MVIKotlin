@@ -34,7 +34,8 @@ fun TimeTravelSettingsUi(component: TimeTravelSettings) {
                 onHostChanged = component::onHostChanged,
                 onPortChanged = component::onPortChanged,
                 onConnectViaAdbChanged = component::onConnectViaAdbChanged,
-                onWrapEventDetailsChanged = component::onWrapEventDetailsChanged
+                onWrapEventDetailsChanged = component::onWrapEventDetailsChanged,
+                onDarkModeChanged = component::onDarkModeChanged
             )
         )
     }
@@ -79,6 +80,14 @@ private fun SettingsDialog(
                 onChanged = events.onWrapEventDetailsChanged
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            CheckboxSetting(
+                text = "Dark mode",
+                isChecked = editing.isDarkMode,
+                onChanged = events.onDarkModeChanged
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.align(Alignment.End)) {
@@ -119,5 +128,6 @@ private class SettingsEvents(
     val onHostChanged: (String) -> Unit,
     val onPortChanged: (String) -> Unit,
     val onConnectViaAdbChanged: (Boolean) -> Unit,
-    val onWrapEventDetailsChanged: (Boolean) -> Unit
+    val onWrapEventDetailsChanged: (Boolean) -> Unit,
+    val onDarkModeChanged: (Boolean) -> Unit
 )

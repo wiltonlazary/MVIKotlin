@@ -20,12 +20,12 @@ dependencies {
 
 project.withGroovyBuilder {
     "patchPluginXml" {
-        "sinceBuild"("192")
+        "sinceBuild"("193")
     }
 }
 
 intellij {
-    version = "2019.2"
+    version = "2019.3"
     updateSinceUntilBuild = false
 }
 

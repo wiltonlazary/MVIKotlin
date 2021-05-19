@@ -56,4 +56,8 @@ class TimeTravelSettingsComponent(
     override fun onWrapEventDetailsChanged(wrapEventDetails: Boolean) {
         store.accept(Intent.SetWrapEventDetails(wrapEventDetails = wrapEventDetails))
     }
+
+    override fun onDarkModeChanged(isDarkMode: Boolean) {
+        store.accept(Intent.SetDarkMode(isDarkMode = isDarkMode))
+    }
 }

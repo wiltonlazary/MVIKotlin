@@ -5,35 +5,46 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
-
-private val DarkGreenColorPalette =
-    darkColors(
-        primary = green200,
-        primaryVariant = green700,
-        secondary = teal200,
-        onPrimary = Color.Black,
-        onSecondary = Color.White,
-        error = Color.Red,
-    )
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.LocalUiConfig
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.UiConfig
 
 private val LightGreenColorPalette =
     lightColors(
-        primary = green500,
-        primaryVariant = green700,
-        secondary = teal200,
+        primary = indigo500,
+        primaryVariant = indigo700,
+        secondary = green200,
+        secondaryVariant = green400,
         onPrimary = Color.White,
-        onSurface = Color.Black
+        onSecondary = Color.Black,
+        onSurface = Color.Black,
+        error = Color.Red,
+    )
+
+private val DarkGreenColorPalette =
+    darkColors(
+        primary = indigo200,
+        primaryVariant = indigo700,
+        secondary = green200,
+        secondaryVariant = green400,
+        onPrimary = Color.Black,
+        onSecondary = Color.Black,
+        onSurface = Color.White,
+        error = Color.Red,
     )
 
 @Composable
 fun TimeTravelClientTheme(
-    darkTheme: Boolean = false,
+    isDarkMode: Boolean = false,
+    uiConfig: UiConfig = UiConfig(),
     colorsOverride: (Colors) -> Colors = { it },
     content: @Composable () -> Unit,
 ) {
-    MaterialTheme(
-        colors = colorsOverride(if (darkTheme) DarkGreenColorPalette else LightGreenColorPalette),
-        content = content
-    )
+    CompositionLocalProvider(LocalUiConfig provides uiConfig) {
+        MaterialTheme(
+            colors = colorsOverride(if (isDarkMode) DarkGreenColorPalette else LightGreenColorPalette),
+            content = content
+        )
+    }
 }

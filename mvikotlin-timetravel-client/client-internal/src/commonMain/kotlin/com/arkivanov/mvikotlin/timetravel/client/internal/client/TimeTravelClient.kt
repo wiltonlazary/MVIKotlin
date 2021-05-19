@@ -2,7 +2,7 @@ package com.arkivanov.mvikotlin.timetravel.client.internal.client
 
 import androidx.compose.runtime.State
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.TimeTravelSettings
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
 
 interface TimeTravelClient {
 
@@ -30,7 +30,7 @@ interface TimeTravelClient {
         val currentEventIndex: Int,
         val buttons: Buttons,
         val selectedEventIndex: Int,
-        val selectedEventValue: Value?,
+        val selectedEventValue: ParsedValue?,
         val errorText: String?
     ) {
         data class Buttons(

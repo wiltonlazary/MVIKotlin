@@ -20,12 +20,14 @@ internal class TimeTravelSettingsStoreSettings(
             host = storage[KEY_HOST, DEFAULT_HOST],
             port = storage[KEY_PORT, DEFAULT_PORT],
             connectViaAdb = storage[KEY_CONNECT_VIA_ADB, defaultSettings.connectViaAdb],
-            wrapEventDetails = storage[KEY_WRAP_EVENT_DETAILS, false]
+            wrapEventDetails = storage[KEY_WRAP_EVENT_DETAILS, false],
+            isDarkMode = storage[KEY_DARK_MODE, false]
         )
         set(value) {
             storage[KEY_HOST] = value.host
             storage[KEY_PORT] = value.port
             storage[KEY_CONNECT_VIA_ADB] = value.connectViaAdb
+            storage[KEY_DARK_MODE] = value.isDarkMode
             storage[KEY_WRAP_EVENT_DETAILS] = value.wrapEventDetails
         }
 
@@ -34,6 +36,7 @@ internal class TimeTravelSettingsStoreSettings(
         private const val KEY_PORT = "PORT"
         private const val KEY_CONNECT_VIA_ADB = "CONNECT_VIA_ADB"
         private const val KEY_WRAP_EVENT_DETAILS = "WRAP_EVENT_DETAILS"
+        private const val KEY_DARK_MODE = "IS_DARK_MODE"
         private const val DEFAULT_HOST = "localhost"
     }
 }

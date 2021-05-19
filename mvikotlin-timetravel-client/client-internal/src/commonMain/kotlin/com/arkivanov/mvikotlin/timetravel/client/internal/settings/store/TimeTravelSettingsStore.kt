@@ -14,6 +14,7 @@ internal interface TimeTravelSettingsStore : Store<Intent, State, Nothing> {
         data class SetPort(val port: String) : Intent()
         data class SetConnectViaAdb(val connectViaAdb: Boolean) : Intent()
         data class SetWrapEventDetails(val wrapEventDetails: Boolean) : Intent()
+        data class SetDarkMode(val isDarkMode: Boolean) : Intent()
     }
 
     data class State(
@@ -24,14 +25,16 @@ internal interface TimeTravelSettingsStore : Store<Intent, State, Nothing> {
             val host: String,
             val port: Int,
             val connectViaAdb: Boolean,
-            val wrapEventDetails: Boolean
+            val wrapEventDetails: Boolean,
+            val isDarkMode: Boolean
         )
 
         data class Editing(
             val host: String,
             val port: String,
             val connectViaAdb: Boolean,
-            val wrapEventDetails: Boolean
+            val wrapEventDetails: Boolean,
+            val isDarkMode: Boolean
         )
     }
 }

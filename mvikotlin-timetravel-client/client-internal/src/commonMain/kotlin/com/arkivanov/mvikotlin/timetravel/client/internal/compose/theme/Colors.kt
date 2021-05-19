@@ -2,7 +2,10 @@ package com.arkivanov.mvikotlin.timetravel.client.internal.compose.theme
 
 import androidx.compose.ui.graphics.Color
 
-internal val green200 = Color(0xffa5d6a7)
-internal val green500 = Color(0xff4caf50)
-internal val green700 = Color(0xff388e3c)
-internal val teal200 = Color(0xff80deea)
+internal val indigo500 = Color(0xFF3F51B5)
+internal val indigo700 = Color(0xFF303F9F)
+internal val green200 = Color(0xFFA5D6A7)
+internal val green400 = Color(0xFF66BB6A)
+
+internal val indigo200 = Color(0xFF9FA8DA)
+

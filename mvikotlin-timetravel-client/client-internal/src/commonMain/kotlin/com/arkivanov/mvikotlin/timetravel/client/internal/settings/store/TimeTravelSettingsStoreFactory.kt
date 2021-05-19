@@ -27,6 +27,7 @@ internal class TimeTravelSettingsStoreFactory(
         data class PortChanged(val port: String) : Result()
         data class ConnectViaAdbChanged(val connectViaAdb: Boolean) : Result()
         data class WrapEventDetailsChanged(val wrapEventDetails: Boolean) : Result()
+        data class DarkModeChanged(val isDarkMode: Boolean) : Result()
     }
 
     private inner class ExecutorImpl : ReaktiveExecutor<Intent, Nothing, State, Result, Nothing>() {
@@ -39,6 +40,7 @@ internal class TimeTravelSettingsStoreFactory(
                 is Intent.SetPort -> dispatch(Result.PortChanged(port = intent.port))
                 is Intent.SetConnectViaAdb -> dispatch(Result.ConnectViaAdbChanged(connectViaAdb = intent.connectViaAdb))
                 is Intent.SetWrapEventDetails -> dispatch(Result.WrapEventDetailsChanged(wrapEventDetails = intent.wrapEventDetails))
+                is Intent.SetDarkMode -> dispatch(Result.DarkModeChanged(isDarkMode = intent.isDarkMode))
             }
 
         private fun saveEdit(state: State) {
@@ -52,7 +54,8 @@ internal class TimeTravelSettingsStoreFactory(
                 host = host,
                 port = port.toIntOrNull() ?: return null,
                 connectViaAdb = connectViaAdb,
-                wrapEventDetails = wrapEventDetails
+                wrapEventDetails = wrapEventDetails,
+                isDarkMode = isDarkMode
             )
         }
     }
@@ -67,6 +70,7 @@ internal class TimeTravelSettingsStoreFactory(
                 is Result.PortChanged -> copy(editing = editing?.copy(port = result.port))
                 is Result.ConnectViaAdbChanged -> copy(editing = editing?.copy(connectViaAdb = result.connectViaAdb))
                 is Result.WrapEventDetailsChanged -> copy(editing = editing?.copy(wrapEventDetails = result.wrapEventDetails))
+                is Result.DarkModeChanged -> copy(editing = editing?.copy(isDarkMode = result.isDarkMode))
             }
 
         private fun State.Settings.toEditing(): State.Editing =
@@ -74,7 +78,8 @@ internal class TimeTravelSettingsStoreFactory(
                 host = host,
                 port = port.toString(),
                 connectViaAdb = connectViaAdb,
-                wrapEventDetails = wrapEventDetails
+                wrapEventDetails = wrapEventDetails,
+                isDarkMode = isDarkMode
             )
     }
 

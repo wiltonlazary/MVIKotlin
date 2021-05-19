@@ -17,16 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
@@ -46,24 +43,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient
 import com.arkivanov.mvikotlin.timetravel.client.internal.client.TimeTravelClient.Model
 import com.arkivanov.mvikotlin.timetravel.client.internal.compose.HorizontalScrollbar
 import com.arkivanov.mvikotlin.timetravel.client.internal.compose.PopupDialog
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.ToolbarButton
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.TreeNode
 import com.arkivanov.mvikotlin.timetravel.client.internal.compose.VerticalScrollbar
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.contentAlpha
+import com.arkivanov.mvikotlin.timetravel.client.internal.compose.contentColor
 import com.arkivanov.mvikotlin.timetravel.client.internal.settings.ui.TimeTravelSettingsUi
-import com.arkivanov.mvikotlin.timetravel.client.internal.utils.getText
-import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.Value
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.ParsedValue
+import com.arkivanov.mvikotlin.timetravel.proto.internal.data.value.toTreeNode
 
 @Composable
 fun TimeTravelClientUi(component: TimeTravelClient) {
-    val model = component.models.value
+    Box(modifier = Modifier.fillMaxSize()) {
+        val model = component.models.value
 
-    Box {
         Client(
             model = model,
             wrapEventDetails = component.settings.models.value.settings.wrapEventDetails,
@@ -148,92 +149,83 @@ private fun ButtonBar(
     buttons: Model.Buttons,
     events: ButtonBarEvents
 ) {
-    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-        IconButton(
-            imageVector = Icons.Default.Phonelink,
-            enabled = buttons.isConnectEnabled,
-            onClick = events.onConnect
-        )
-        IconButton(
-            imageVector = Icons.Default.PhonelinkOff,
-            enabled = buttons.isDisconnectEnabled,
-            onClick = events.onDisconnect
-        )
+    Surface(modifier = Modifier.height(IntrinsicSize.Min).fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            ToolbarButton(
+                imageVector = Icons.Default.Phonelink,
+                enabled = buttons.isConnectEnabled,
+                onClick = events.onConnect
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.PhonelinkOff,
+                enabled = buttons.isDisconnectEnabled,
+                onClick = events.onDisconnect
+            )
 
-        VerticalDivider()
+            VerticalDivider()
 
-        IconButton(
-            imageVector = Icons.Default.FiberManualRecord,
-            enabled = buttons.isStartRecordingEnabled,
-            onClick = events.onStartRecording
-        )
-        IconButton(
-            imageVector = Icons.Default.Stop,
-            enabled = buttons.isStopRecordingEnabled,
-            onClick = events.onStopRecording
-        )
-        IconButton(
-            imageVector = Icons.Default.SkipPrevious,
-            enabled = buttons.isMoveToStartEnabled,
-            onClick = events.onMoveToStart
-        )
-        IconButton(
-            imageVector = Icons.Default.ChevronLeft,
-            enabled = buttons.isStepBackwardEnabled,
-            onClick = events.onStepBackward
-        )
-        IconButton(
-            imageVector = Icons.Default.ChevronRight,
-            enabled = buttons.isStepForwardEnabled,
-            onClick = events.onStepForward
-        )
-        IconButton(
-            imageVector = Icons.Default.SkipNext,
-            enabled = buttons.isMoveToEndEnabled,
-            onClick = events.onMoveToEnd
-        )
-        IconButton(
-            imageVector = Icons.Default.Close,
-            enabled = buttons.isCancelEnabled,
-            onClick = events.onCancel
-        )
-        IconButton(
-            imageVector = Icons.Default.BugReport,
-            enabled = buttons.isDebugEventEnabled,
-            onClick = events.onDebug
-        )
+            ToolbarButton(
+                imageVector = Icons.Default.FiberManualRecord,
+                enabled = buttons.isStartRecordingEnabled,
+                onClick = events.onStartRecording
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.Stop,
+                enabled = buttons.isStopRecordingEnabled,
+                onClick = events.onStopRecording
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.SkipPrevious,
+                enabled = buttons.isMoveToStartEnabled,
+                onClick = events.onMoveToStart
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.ChevronLeft,
+                enabled = buttons.isStepBackwardEnabled,
+                onClick = events.onStepBackward
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.ChevronRight,
+                enabled = buttons.isStepForwardEnabled,
+                onClick = events.onStepForward
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.SkipNext,
+                enabled = buttons.isMoveToEndEnabled,
+                onClick = events.onMoveToEnd
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.Close,
+                enabled = buttons.isCancelEnabled,
+                onClick = events.onCancel
+            )
+            ToolbarButton(
+                imageVector = Icons.Default.BugReport,
+                enabled = buttons.isDebugEventEnabled,
+                onClick = events.onDebug
+            )
 
-        VerticalDivider()
+            VerticalDivider()
 
-        IconButton(
-            imageVector = Icons.Default.Share,
-            enabled = buttons.isExportEventsEnabled,
-            onClick = events.onExportEvents
-        )
+            ToolbarButton(
+                imageVector = Icons.Default.Share,
+                enabled = buttons.isExportEventsEnabled,
+                onClick = events.onExportEvents
+            )
 
-        IconButton(
-            imageVector = Icons.Default.Download,
-            enabled = buttons.isImportEventsEnabled,
-            onClick = events.onImportEvents
-        )
+            ToolbarButton(
+                imageVector = Icons.Default.Download,
+                enabled = buttons.isImportEventsEnabled,
+                onClick = events.onImportEvents
+            )
 
-        VerticalDivider()
+            VerticalDivider()
 
-        IconButton(
-            imageVector = Icons.Default.Settings,
-            onClick = events.onEditSettings
-        )
-    }
-}
-
-@Composable
-private fun IconButton(imageVector: ImageVector, enabled: Boolean = true, onClick: () -> Unit) {
-    androidx.compose.material.IconButton(onClick = onClick, enabled = enabled) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = null,
-            tint = contentColor(alpha = if (enabled) contentAlpha() else ContentAlpha.disabled)
-        )
+            ToolbarButton(
+                imageVector = Icons.Default.Settings,
+                onClick = events.onEditSettings
+            )
+        }
     }
 }
 
@@ -242,11 +234,11 @@ private fun Events(
     events: List<String>,
     currentEventIndex: Int,
     selectedEventIndex: Int,
-    selectedEventValue: Value?,
+    selectedEventValue: ParsedValue?,
     wrapEventDetails: Boolean,
     onClick: (Int) -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxHeight()) {
+    Row(modifier = Modifier.fillMaxSize()) {
         EventList(
             events = events,
             modifier = Modifier.weight(0.4F).fillMaxHeight(),
@@ -270,7 +262,7 @@ private fun VerticalDivider(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colors.onSurface.copy(alpha = 0.12F),
     thickness: Dp = 1.dp,
-    indent: Dp = 8.dp
+    indent: Dp = 4.dp
 ) {
     Box(
         modifier
@@ -289,28 +281,43 @@ private fun EventList(
     selectedEventIndex: Int,
     onClick: (Int) -> Unit
 ) {
-    LazyColumn(modifier = modifier) {
-        itemsIndexed(events) { index, event ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onClick(index) }
-                    .run { if (index == selectedEventIndex) background(contentColor(alpha = 0.2F)) else this }
-            ) {
-                Text(
-                    text = event,
-                    modifier = Modifier.padding(8.dp),
-                    fontFamily = FontFamily.Monospace,
-                    color = contentColor(alpha = contentAlpha().times(if (index <= currentEventIndex) 1F else 0.5F))
-                )
+    Box(modifier = modifier) {
+        val listState = rememberLazyListState()
+
+        LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+            itemsIndexed(events) { index, event ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onClick(index) }
+                        .run { if (index == selectedEventIndex) background(contentColor(alpha = 0.2F)) else this }
+                ) {
+                    Text(
+                        text = event,
+                        modifier = Modifier.padding(4.dp),
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 12.sp,
+                        color = contentColor(alpha = contentAlpha().times(if (index <= currentEventIndex) 1F else 0.5F))
+                    )
+                }
             }
         }
+
+        VerticalScrollbar(
+            lazyListState = listState,
+            itemCount = events.size,
+            averageItemSize = 28.dp,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(vertical = 8.dp)
+                .fillMaxHeight()
+        )
     }
 }
 
 @Composable
 private fun EventDetails(
-    value: Value?,
+    value: ParsedValue?,
     wrap: Boolean,
     modifier: Modifier
 ) {
@@ -318,17 +325,27 @@ private fun EventDetails(
         val scrollStateVertical = rememberScrollState(0)
         val scrollStateHorizontal = rememberScrollState(0)
 
-        SelectionContainer {
-            Text(
-                text = value?.getText() ?: "",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-                    .verticalScroll(scrollStateVertical)
-                    .run { if (wrap) this else horizontalScroll(scrollStateHorizontal) },
-                fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colors.onBackground
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+                .verticalScroll(scrollStateVertical)
+                .run { if (wrap) this else horizontalScroll(scrollStateHorizontal) }
+        ) {
+            if (value != null) {
+                TreeNode(
+                    node = value.toTreeNode(),
+                    title = { text ->
+                        Text(
+                            text = text,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 12.sp,
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    isInitiallyExpanded = true
+                )
+            }
         }
 
         VerticalScrollbar(
@@ -350,12 +367,6 @@ private fun EventDetails(
         }
     }
 }
-
-@Composable
-private fun contentColor(alpha: Float = contentAlpha()): Color = LocalContentColor.current.copy(alpha = alpha)
-
-@Composable
-private fun contentAlpha(): Float = LocalContentAlpha.current
 
 private class ButtonBarEvents(
     val onConnect: () -> Unit,

@@ -13,6 +13,7 @@ interface TimeTravelSettings {
     fun onPortChanged(port: String)
     fun onConnectViaAdbChanged(connectViaAdb: Boolean)
     fun onWrapEventDetailsChanged(wrapEventDetails: Boolean)
+    fun onDarkModeChanged(isDarkMode: Boolean)
 
     data class Model(
         val settings: Settings,
@@ -22,14 +23,16 @@ interface TimeTravelSettings {
             val host: String,
             val port: Int,
             val connectViaAdb: Boolean,
-            val wrapEventDetails: Boolean
+            val wrapEventDetails: Boolean,
+            val isDarkMode: Boolean
         )
 
         data class Editing(
             val host: String,
             val port: String,
             val connectViaAdb: Boolean,
-            val wrapEventDetails: Boolean
+            val wrapEventDetails: Boolean,
+            val isDarkMode: Boolean
         )
     }
 }

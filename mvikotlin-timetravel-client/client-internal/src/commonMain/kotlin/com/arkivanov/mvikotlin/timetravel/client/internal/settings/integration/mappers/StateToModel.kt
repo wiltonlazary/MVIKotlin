@@ -16,7 +16,8 @@ private fun State.Settings.toSettingsModel(): Model.Settings =
         host = host,
         port = port,
         connectViaAdb = connectViaAdb,
-        wrapEventDetails = wrapEventDetails
+        wrapEventDetails = wrapEventDetails,
+        isDarkMode = isDarkMode
     )
 
 private fun State.Editing.toEditingModel(): Model.Editing =
@@ -24,5 +25,6 @@ private fun State.Editing.toEditingModel(): Model.Editing =
         host = host,
         port = port,
         connectViaAdb = connectViaAdb,
-        wrapEventDetails = wrapEventDetails
+        wrapEventDetails = wrapEventDetails,
+        isDarkMode = isDarkMode
     )
